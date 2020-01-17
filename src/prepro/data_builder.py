@@ -285,7 +285,7 @@ def format_to_lines(args):
       elif fn.startswith('test'):
         test_files.append(f)
       elif fn.startswith('new'):
-        test_files.append(f)
+        new_files.append(f)
 
     corpora = {'train': train_files, 'valid': valid_files, 'test': test_files, 'new': new_files}
     for corpus_type in ['train', 'valid', 'test', 'new']:
