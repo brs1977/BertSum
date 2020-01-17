@@ -10,7 +10,7 @@ from models.reporter import ReportMgr
 from models.stats import Statistics
 from others.logging import logger
 from others.utils import test_rouge, rouge_results_to_str
-
+from collections import deque
 
 def _tally_parameters(model):
     n_params = sum([p.nelement() for p in model.parameters()])
@@ -88,7 +88,7 @@ class Trainer(object):
 
     def __init__(self,  args, model,  optim,
                   grad_accum_count=1, n_gpu=1, gpu_rank=1,
-                  report_manager=None):
+                  report_manager=None, auto_clear_checkpoints=True):
         # Basic attributes.
         self.args = args
         self.save_checkpoint_steps = args.save_checkpoint_steps
@@ -98,6 +98,8 @@ class Trainer(object):
         self.n_gpu = n_gpu
         self.gpu_rank = gpu_rank
         self.report_manager = report_manager
+        self.auto_clear_checkpoints = auto_clear_checkpoints
+        self._checkpoint_files = deque(maxlen=100)
 
         self.loss = torch.nn.BCELoss(reduction='none')
         assert grad_accum_count > 0
@@ -351,6 +353,11 @@ class Trainer(object):
                 distributed.all_reduce_and_rescale_tensors(
                     grads, float(1))
             self.optim.step()
+    def _remove_old_checkpoint(self, path):
+        try:
+            os.remove(filePath)
+        except:
+            logger.info("Error while deleting file " % path)
 
     def _save(self, step):
         real_model = self.model
@@ -371,6 +378,11 @@ class Trainer(object):
         # checkpoint_path = '%s_step_%d.pt' % (FLAGS.model_path, step)
         if (not os.path.exists(checkpoint_path)):
             torch.save(checkpoint, checkpoint_path)
+
+            if self.auto_clear_checkpoints:
+                if len(_checkpoint_files)>0:
+                    self._remove_old_checkpoint(_checkpoint_files.popleft())
+            self._checkpoint_files.appendleft(checkpoint_path)
             return checkpoint, checkpoint_path
 
     def _start_report_manager(self, start_time=None):
