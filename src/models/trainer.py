@@ -355,9 +355,9 @@ class Trainer(object):
             self.optim.step()
     def _remove_old_checkpoint(self, path):
         try:
-            os.remove(filePath)
+            os.remove(path)
         except:
-            logger.info("Error while deleting file " % path)
+            logger.info("Error while deleting file %s" % path)
 
     def _save(self, step):
         real_model = self.model
