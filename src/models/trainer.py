@@ -381,8 +381,8 @@ class Trainer(object):
 
             if self.auto_clear_checkpoints:
                 if len(self._checkpoint_files)>0:
-                    self._remove_old_checkpoint(_checkpoint_files.popleft())
-            self._checkpoint_files.appendleft(checkpoint_path)
+                    self._remove_old_checkpoint(self._checkpoint_files.popleft())
+            self._checkpoint_files.append(checkpoint_path)
             return checkpoint, checkpoint_path
 
     def _start_report_manager(self, start_time=None):
