@@ -380,7 +380,7 @@ class Trainer(object):
             torch.save(checkpoint, checkpoint_path)
 
             if self.auto_clear_checkpoints:
-                if len(_checkpoint_files)>0:
+                if len(self._checkpoint_files)>0:
                     self._remove_old_checkpoint(_checkpoint_files.popleft())
             self._checkpoint_files.appendleft(checkpoint_path)
             return checkpoint, checkpoint_path
