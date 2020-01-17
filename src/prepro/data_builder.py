@@ -200,7 +200,7 @@ def format_to_bert(args):
     if (args.dataset != ''):
         datasets = [args.dataset]
     else:
-        datasets = ['train', 'valid', 'test']
+        datasets = ['train', 'valid', 'test', 'new']
     for corpus_type in datasets:
         a_lst = []
         for json_f in glob.glob(pjoin(args.raw_path, '*' + corpus_type + '.*.json')):
@@ -275,7 +275,7 @@ def _format_to_bert(params):
 
 
 def format_to_lines(args):
-    train_files, valid_files, test_files = [], [], []
+    train_files, valid_files, test_files, new_files = [], [], [], []
     for f in glob.glob(pjoin(args.raw_path, '*.json')):
       fn = f.split('/')[-1].split('.')[0]
       if fn.startswith('train'):
@@ -284,9 +284,11 @@ def format_to_lines(args):
         valid_files.append(f)
       elif fn.startswith('test'):
         test_files.append(f)
+      elif fn.startswith('new'):
+        test_files.append(f)
 
-    corpora = {'train': train_files, 'valid': valid_files, 'test': test_files}
-    for corpus_type in ['train', 'valid', 'test']:
+    corpora = {'train': train_files, 'valid': valid_files, 'test': test_files, 'new': new_files}
+    for corpus_type in ['train', 'valid', 'test', 'new']:
         a_lst = [(f, args) for f in corpora[corpus_type]]
         pool = Pool(args.n_cpus)
         dataset = []
