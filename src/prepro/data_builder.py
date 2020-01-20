@@ -263,7 +263,7 @@ def _format_to_bert(params):
             oracle_ids = combination_selection(source, tgt, 3)
         b_data = bert.preprocess(source, tgt, oracle_ids)
         if (b_data is None):
-            print(d+' is none')
+            print(d)
             continue
         indexed_tokens, labels, segments_ids, cls_ids, src_txt, tgt_txt = b_data
         b_data_dict = {"src": indexed_tokens, "labels": labels, "segs": segments_ids, 'clss': cls_ids,
