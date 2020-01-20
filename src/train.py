@@ -239,7 +239,7 @@ def predict(args, device_id, pt, step):
                                   args.batch_size, device,
                                   shuffle=False, is_test=True)
     trainer = build_trainer(args, device_id, model, None)
-    trainer.predict(test_iter,step)
+    trainer.predict(test_iter,step, result_file=args.result_file )
 
 def baseline(args, cal_lead=False, cal_oracle=False):
 
@@ -352,6 +352,8 @@ if __name__ == '__main__':
     parser.add_argument("-block_trigram", type=str2bool, nargs='?', const=True, default=True)
 
     parser.add_argument("-bert_model", default='bert-base-uncased', type=str)
+    parser.add_argument("-result_file", default='predicted_titles.csv', type=str)
+    
 
     args = parser.parse_args()
     args.gpu_ranks = [int(i) for i in args.gpu_ranks.split(',')]

@@ -303,11 +303,11 @@ class Trainer(object):
 
         return stats
 
-    def predict(self, test_iter, step, cal_lead=False, cal_oracle=False):
-        """ Validate model.
-            valid_iter: validate data iterator
+    def predict(self, test_iter, step, result_file = 'predicted_titles.csv', cal_lead=False, cal_oracle=False):
+        """ Predict model.
+            test_iter: predict data iterator
         Returns:
-            :obj:`nmt.Statistics`: validation loss statistics
+            :obj:`nmt.Statistics`: predict loss statistics
         """
         # Set model in validating mode.
         def _get_ngrams(n, text):
@@ -387,7 +387,7 @@ class Trainer(object):
                         source.append(''.join(batch.src_str[i]))
                     
                     submission_df = pd.DataFrame({'abstract': source, 'title': pred})
-                    submission_df.to_csv('predicted_titles.csv', index=False)
+                    submission_df.to_csv(result_file, index=False)
                     
                     # for i in range(len(pred)):
                     #     save_pred.write( pred[i].strip().replace(chr(240), "").replace('"', '').replace("'", "").rstrip() + ' ' + chr(240) + ' ' + source[i].strip().replace(chr(240), "").replace('"', '').replace("'", "").rstrip() + ' ' + chr(240) + '\n' )
