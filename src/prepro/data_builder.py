@@ -167,8 +167,10 @@ class BertData():
         labels = labels[:self.args.max_nsents]
 
         if (len(src) < self.args.min_nsents):
+            print('min_nsents')
             return None
         if (len(labels) == 0):
+            print('labels')
             return None
 
         src_txt = [' '.join(sent) for sent in src]
