@@ -331,6 +331,8 @@ class Trainer(object):
         stats = Statistics()
 
         can_path = '%s_step%d.results'%(self.args.result_path,step)
+        pred = []
+        source = []
 
         with open(can_path, 'w') as save_pred:
             with torch.no_grad():
@@ -342,8 +344,6 @@ class Trainer(object):
                     mask = batch.mask
                     mask_cls = batch.mask_cls
 
-                    pred = []
-                    source = []
 
                     if (cal_lead):
                         selected_ids = [list(range(batch.clss.size(1)))] * batch.batch_size
@@ -386,8 +386,8 @@ class Trainer(object):
                         pred.append(_pred)
                         source.append(''.join(batch.src_str[i]))
                     
-                    submission_df = pd.DataFrame({'abstract': source, 'title': pred})
-                    submission_df.to_csv(result_file, index=False)
+        submission_df = pd.DataFrame({'abstract': source, 'title': pred})
+        submission_df.to_csv(result_file, index=False)
                     
                     # for i in range(len(pred)):
                     #     save_pred.write( pred[i].strip().replace(chr(240), "").replace('"', '').replace("'", "").rstrip() + ' ' + chr(240) + ' ' + source[i].strip().replace(chr(240), "").replace('"', '').replace("'", "").rstrip() + ' ' + chr(240) + '\n' )
